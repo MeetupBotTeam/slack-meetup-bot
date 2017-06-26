@@ -43,7 +43,7 @@ app.post('/meetupbot-show', function(req, res) {
     reply.text = 'Please provide a location along with the command @'+userName+'\nFor ex: /meetupbot-show Mumbai & Javascript.';
     return res.json({text: reply.text});
   } else if(interest =='' || interest == undefined){
-    reply.text = 'Please privide a location & search term along with the command @'+userName+'\nFor ex: /meetupbot-show Mumbai & Javascript.\nIt helps in filtering the list of meetups according to your interest :blush:.'+'\nActually it will be difficult to show a long list of meetups for me right now :stuck_out_tongue_winking_eye:.';
+    reply.text = 'Please provide a location & search term along with the command @'+userName+'\nFor ex: /meetupbot-show Mumbai & Javascript.\nIt helps in filtering the list of meetups according to your interest :blush:.'+'\nActually it will be difficult to show a long list of meetups for me right now :stuck_out_tongue_winking_eye:.';
     res.json(reply);
   } else {
      reply.text = 'Hey '+userName+',\nThis is the list of meetups near '+area+'.';
