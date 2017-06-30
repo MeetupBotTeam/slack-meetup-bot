@@ -26,12 +26,14 @@ app.post('/meetupbot', function(req, res){
     "text": "Hello, "+userName+" I am a MeetupBot. I show list of meetups going on near your location.\n Try following commands :", 
     "attachments": [
         {
-            "title": "1) /meetupbot-find",
-            "text": "use this to find local meetup-groups based on your location \nfor ex: /meetupbot-find New-York"
-        }
+            title: "1) /meetupbot-find",
+            text: "use this to find local meetup-groups based on your location \nfor ex: /meetupbot-find New-York",
+            color: "#764FA5"
+        },
         {
-        "title": "2) /meetupbot-show <location> & <interest>", 
-        "text": "use this to find events based on location and your interests \nfor ex: /meetupbot-show Mumbai & Javascript (Don't forget to use ampersand (&).)"
+        title: "2) /meetupbot-show <location> & <interest>", 
+        text: "use this to find events based on location and your interests \nfor ex: /meetupbot-show Mumbai & Javascript (Don't forget to use ampersand (&).)",
+        color: "#764FA5"
         }
         ]
   };
