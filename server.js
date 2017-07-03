@@ -122,7 +122,10 @@ app.post('/meetupbot-find', function(req, res){
     if(commandText.includes("&")) {
     var area = commandText.split("&")[0];
     var interest = commandText.split("&")[1];
-    } else area = commandText;
+    } else {
+      var area = commandText;
+      var interest = "";
+    }
     var userName = req.body.user_name;
     var reply = {};
     
@@ -142,7 +145,7 @@ app.post('/meetupbot-find', function(req, res){
             location.lat = data.lat;
             location.lon = data.lng;
             
-            findMeetupGroups(location)
+            findMeetupGroups(location, interest)
             .then(function(groups) {
                 if (groups.length === 0) {
                     reply.text = 'No groups found near '+area+' :sleuth_or_spy: .\nMake sure the location you entered is correct ' 
@@ -150,10 +153,10 @@ app.post('/meetupbot-find', function(req, res){
                     return res.json(reply);
                 } else if (groups.length > 20) {
                     reply.attachments = [];
-                    for (group = 0, group <21, group++) {
-                        current = groups[group];
+                    for (var i = 0; i <21; i++) {
+                        var current = groups[i];
                         composeAttachments(reply.attachments, current);
-                    }
+                    };
                     return res.json(reply);
                 } else {
                     reply.attachments = [];
@@ -206,7 +209,7 @@ function getMeetupEvents(location, interest) {
   var key = process.env.SECRET;
   
   return new Promise((resolve, reject) => {
-    var options = { method: 'GET',
+    var options = { method: 'GET', 
       url: 'https://api.meetup.com/find/events',
       qs: {
         key: key,
@@ -234,7 +237,7 @@ function getMeetupEvents(location, interest) {
 /*
 *function to get meetup-groups near your city/town/location using meetup API
 */
-function findMeetupGroups (location) {
+function findMeetupGroups (location, interest) {
     var key = process.env.SECRET;
     
     return new Promise(function(resolve, reject) {
@@ -248,7 +251,7 @@ function findMeetupGroups (location) {
                 radius: 10
             }
         }
-        if(interest) options.qs.text = interest;
+        if(!(interest === undefined || interest === "")) options.qs.text = interest;
         console.log(options);
         
         //api-request
@@ -258,7 +261,7 @@ function findMeetupGroups (location) {
                reject
            } else {
                body = JSON.parse(body);
-               console.log(response);
+              // console.log(response);
                resolve(body);
            }
         }); 
@@ -270,7 +273,7 @@ function composeAttachments(arr, obj){
     arr.push({
                             title: obj.name,
                             text: obj.description,
-                            fields = [
+                            fields: [
                                 {
                                     "title": "Link",
                                     "value": obj.link,
