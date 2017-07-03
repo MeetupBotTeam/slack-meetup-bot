@@ -26,8 +26,9 @@ app.post('/meetupbot', function(req, res){
     "text": "Hello, "+userName+" I am a MeetupBot. I show list of meetups going on near your location.\n Try following commands :", 
     "attachments": [
         {
-            title: "1) /meetupbot-find",
-            text: "use this to find local meetup-groups based on your location \nfor ex: /meetupbot-find New-York",
+            title: "1) /meetupbot-find <location> (& <interest>)",
+            text: "use this to find local meetup-groups based on your location \nfor ex: /meetupbot-find New-York"
+            + "\noptional: add parameter for your interests: '/meetupbot-find New-York & <interest>'",
             color: "#764FA5"
         },
         {
@@ -102,18 +103,78 @@ app.post('/meetupbot-show', function(req, res) {
              });
              reply.attachments = attachment;
              return res.json(reply);
-           })
+           }) // catch for getMeetupEvents
            .catch((e) => {
              console.log("error occured in getMeetupEvents promise as "+e);
              return res.json({text: 'Ops something went wrong. Please try again :blush:'});
            });
-       })
+       }) // catch for getGeoCode
       .catch((e) => {
          console.log("error in geocode as "+e);
          return res.json({text: 'Ops something went wrong. Please try again :blush:'});
        }); 
   }
 });
+
+app.post('/meetupbot-find', function(req, res){
+    var location = {};
+    var commandText = req.body.text.replace(" ", "");
+    if(commandText.includes("&")) {
+    var area = commandText.split("&")[0];
+    var interest = commandText.split("&")[1];
+    } else area = commandText;
+    var userName = req.body.user_name;
+    var reply = {};
+    
+    if(!commandText || commandText == undefined){
+        reply.text = '@' + userName + ' Please provide a location along with the command \nFor ex: /meetupbot-find London'
+        + ' (& <category>)';
+        return res.json(reply);
+    } else if(interest === undefined) {
+        reply.text = '@' + userName + ' Please use the correct syntax: /meetupbot-find <location> & <interest>';
+        return res.json(reply);
+    } else {
+        reply.text = "Hey @" + userName +"\nThose are the groups near " + area;
+        if(interest) reply.text += " for " + interest;
+        
+        getGeoCode(area)
+        .then(function(data) {
+            location.lat = data.lat;
+            location.lon = data.lng;
+            
+            findMeetupGroups(location)
+            .then(function(groups) {
+                if (groups.length === 0) {
+                    reply.text = 'No groups found near '+area+' :sleuth_or_spy: .\nMake sure the location you entered is correct ' 
+                    + 'and you didn\'t forget the "&". \nPlease  try again.:slightly_smiling_face:';
+                    return res.json(reply);
+                } else if (groups.length > 20) {
+                    reply.attachments = [];
+                    for (group = 0, group <21, group++) {
+                        current = groups[group];
+                        composeAttachments(reply.attachments, current);
+                    }
+                    return res.json(reply);
+                } else {
+                    reply.attachments = [];
+                    groups.forEach(function(group) {
+                        composeAttachments(reply.attachments, group);
+                    });
+                    return res.json(reply);
+                }
+                
+            })
+            .catch(function() { //catch for findMeetupGroups
+                return res.json({text: 'Ops something went wrong. Please try again :blush:'});
+            })
+        })
+        .catch(function() { // catch for getGeoCode
+            return res.json({text: 'Ops something went wrong. Please try again :blush:'});
+        });
+    }
+    
+});
+
 /*
 *function to get the Geocode from google geocode API.
 */
@@ -168,7 +229,62 @@ function getMeetupEvents(location, interest) {
       }
     });
   });
+};
+
+/*
+*function to get meetup-groups near your city/town/location using meetup API
+*/
+function findMeetupGroups (location) {
+    var key = process.env.SECRET;
+    
+    return new Promise(function(resolve, reject) {
+        var options = {
+            method: "GET",
+            url: "https://api.meetup.com/find/groups",
+            qs: {
+                key: key,
+                lat: location.lat,
+                lon: location.lon,
+                radius: 10
+            }
+        }
+        if(interest) options.qs.text = interest;
+        console.log(options);
+        
+        //api-request
+        request(options, function(error, response, body) {
+           if(error) {
+               console.log("error occured in findMeetupGroups: " + error);
+               reject
+           } else {
+               body = JSON.parse(body);
+               console.log(response);
+               resolve(body);
+           }
+        }); 
+    });
+};
+
+//function to help compose reply
+function composeAttachments(arr, obj){
+    arr.push({
+                            title: obj.name,
+                            text: obj.description,
+                            fields = [
+                                {
+                                    "title": "Link",
+                                    "value": obj.link,
+                                    "short": true
+                                },
+                                {
+                                    "title": "Members",
+                                    "value": obj.members,
+                                    "short": true
+                                },
+                            ]
+                        })
 }
+
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
