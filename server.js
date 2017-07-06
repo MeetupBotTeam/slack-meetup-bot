@@ -291,7 +291,7 @@ function composeAttachments(arr, obj){
 };
 
 function removeHtml(str) {
-    var tags = /<\/?\w+>/g, bold = /<\/?b>/g, reserved = /&\w+;/g, italics = /<\/?i>/g, linebreak = /<\/?br>/g, imgAndA = /<(?:a\s)|(?:img\s).+>/g;
+    var tags = /<\/?\w+>/g, bold = /<\/?b>/g, reserved = /&\w+;/g, italics = /<\/?i>/g, linebreak = /<\/?br>/g, imgAndA = /<(?:a\s|img\s).+>/g;
     var descr;
     // cut str to 300 characters
     if (str.length>300) descr=str.substr(0, 300);
