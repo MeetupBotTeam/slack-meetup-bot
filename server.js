@@ -138,7 +138,7 @@ app.post('/meetupbot-find', function(req, res){
         return res.json(reply);
     } else {
         reply.text = "Hey @" + userName +"\nThose are the groups near " + area;
-        if(interest) reply.text += " for " + interest;
+        if(interest) reply.text += " for" + interest;
         
         getGeoCode(area)
         .then(function(data) {
@@ -272,7 +272,9 @@ function findMeetupGroups (location, interest) {
 function composeAttachments(arr, obj){
     arr.push({
                             title: obj.name,
-                            text: obj.description,
+                            text: /*obj.description,*/removeHtml(obj.description),
+                            color: "#764FA5",
+                            mrkdwn_in: ["text", "attachments"],
                             fields: [
                                 {
                                     "title": "Link",
@@ -286,7 +288,18 @@ function composeAttachments(arr, obj){
                                 },
                             ]
                         })
-}
+};
+
+function removeHtml(str) {
+    var tags = /<\/?\w+>/g, bold = /<\/?b>/g, reserved = /&\w+;/g, italics = /<\/?i>/g, linebreak = /<\/?br>/g, imgAndA = /<(?:a\s)|(?:img\s).+>/g;
+    var descr;
+    // cut str to 300 characters
+    if (str.length>300) descr=str.substr(0, 300);
+    else descr = str;
+    var description = descr.replace(bold, "*").replace(italics, "_").replace(reserved, "").replace(linebreak, "\n");
+    var result = description.replace(tags, "").replace(imgAndA, "").replace(/<$/, "");
+    return result + "...";
+};
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
