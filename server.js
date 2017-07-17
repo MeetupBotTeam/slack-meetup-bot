@@ -26,7 +26,7 @@ app.post('/meetupbot', function(req, res){
     "text": "Hello, "+userName+" I am a MeetupBot. I show list of meetups going on near your location.\n Try following commands :", 
     "attachments": [
         {
-            title: "1) /meetupbot-find <location> (& <interest>)",
+            title: "1) /meetupbot-find <location> (& <group>)",
             text: "use this to find local meetup-groups based on your location \nfor ex: /meetupbot-find New-York"
             + "\noptional: add parameter for your interests: '/meetupbot-find New-York & <interest>'",
             color: "#764FA5"
@@ -209,7 +209,7 @@ function getMeetupEvents(location, interest) {
   var key = process.env.SECRET;
   
   return new Promise((resolve, reject) => {
-    var options = { method: 'GET', 
+    var options = { method: 'GET',
       url: 'https://api.meetup.com/find/events',
       qs: {
         key: key,
@@ -291,17 +291,20 @@ function composeAttachments(arr, obj){
 };
 
 function removeHtml(str) {
-    var tags = /<\/?\w+>/g, bold = /<\/?b>/g, reserved = /&\w+;/g, italics = /<\/?i>/g, linebreak = /<\/?br>/g, imgAndA = /<(?:a\s|img\s).+>/g;
+    var tags = /<\/?\w+>/g, bold = /<\/?b>/g, entities = /&\w+;/g, italics = /<\/?i>/g;
+    var linebreak = /<\/?br>/g, imgAndA = /<(?:a\s|img\s).+>/g;
     var descr;
     // cut str to 300 characters
     if (str.length>300) descr=str.substr(0, 300);
     else descr = str;
-    var description = descr.replace(bold, "*").replace(italics, "_").replace(reserved, "").replace(linebreak, "\n");
-    var result = description.replace(tags, "").replace(imgAndA, "").replace(/<$/, "");
+    var description = descr.replace(bold, "*").replace(italics, "_").replace(entities, "").replace(linebreak, "\n");
+    var result = description.replace(tags, "").replace(imgAndA, "").replace(/<\w*$/, "");
     return result + "...";
 };
+
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
