@@ -1,10 +1,7 @@
 {
-  "//1": "describes your app and its dependencies",
-  "//2": "https://docs.npmjs.com/files/package.json",
-  "//3": "updating this file will download and update your packages",
-  "name": "my-glitch-app",
+  "name": "meetupbot",
   "version": "0.0.1",
-  "description": "What am I about?",
+  "description": "MeetupBot for Slack",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -19,12 +16,13 @@
     "node": "8.1.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/welcome-project"
+    "url": "https://github.com/MeetupBotTeam/slack-meetup-bot.git"
   },
   "license": "MIT",
   "keywords": [
     "node",
-    "glitch",
+    "meetupbot",
+    "slackbot",
     "express"
   ]
 }

@@ -32,7 +32,7 @@ app.post('/meetupbot', function (req, res) {
        },
        {
          title: "2) /meetupbot-show <location> & <interest>",
-         text: "use this to find events based on location and your interests \nfor ex: /meetupbot-show Mumbai & Javascript (Don't forget to use ampersand (&).)",
+         text: "use this to find meetup-events based on your location and interests \nfor ex: /meetupbot-show Mumbai & Javascript (Don't forget to use ampersand (&).)",
          color: "#764FA5"
        }
     ]
