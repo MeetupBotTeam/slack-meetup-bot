@@ -7,7 +7,7 @@ Preview<br/>
 <img alt="MeetupBot Slack Chat View" src="https://user-images.githubusercontent.com/14115048/28485099-a21ca0f0-6e94-11e7-8a69-85536fe326e0.png" width="700" height="350"/>
 
 ## Installations
-You can install it by hitting the Add to Slack Button on the Landing page [here]().
+You can install it by hitting the Add to Slack Button on the Landing page [here](https://meetupbot.glitch.me/).
 
 Following are the available slack commands
 
@@ -31,5 +31,5 @@ Updating in progress.
 Please send us your questions, bug reports, feature requests. Let us know what we can do to improve MeetupBot.
 
 ## License
-Built by [Premprakash Singh](https://github.com/PREMPRAKASHSINGH), [Linus Brennecke](https://github.com/nusli), [Zameer Haque]()<br/>
+Built by [Premprakash Singh](https://github.com/PREMPRAKASHSINGH), [Linus Brennecke](https://github.com/nusli), [Zameer Haque](https://github.com/zamhaq)<br/>
 Updating in progress.
