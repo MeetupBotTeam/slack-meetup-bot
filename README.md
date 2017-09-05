@@ -7,7 +7,7 @@ Preview<br/>
 <img alt="MeetupBot Slack Chat View" src="https://user-images.githubusercontent.com/14115048/28485099-a21ca0f0-6e94-11e7-8a69-85536fe326e0.png" width="700" height="350"/>
 
 ## Installations
-You can install it by hitting the Add to Slack Button on the Landing page [here](https://meetupbot.glitch.me/).
+You can install it by hitting the Add to Slack Button on the Landing page [here]https://meetupbotteam.github.io/meetupbot-landing-page/).
 
 Following are the available slack commands
 
